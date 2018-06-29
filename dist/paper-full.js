@@ -1,5 +1,5 @@
 /*!
- * Paper.js v0.11.5 - The Swiss Army Knife of Vector Graphics Scripting.
+ * Paper.js v0.11.5-dcc - The Swiss Army Knife of Vector Graphics Scripting.
  * http://paperjs.org/
  *
  * Copyright (c) 2011 - 2016, Juerg Lehni & Jonathan Puckey
@@ -9,7 +9,7 @@
  *
  * All rights reserved.
  *
- * Date: Thu Oct 5 16:16:29 2017 +0200
+ * Date: Wed Oct 11 05:14:45 2017 -0500
  *
  ***
  *
@@ -778,7 +778,7 @@ var PaperScope = Base.extend({
 		}
 	},
 
-	version: "0.11.5",
+	version: "0.11.5-dcc",
 
 	getView: function() {
 		var project = this.project;
@@ -14057,7 +14057,15 @@ new function() {
 	function exportText(item) {
 		var node = SvgElement.create('text', getTransform(item._matrix, true),
 				formatter);
-		node.textContent = item._content;
+		for(var i=0; i<item._lines.length; i++) {
+			var tspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+			tspan.textContent = item._lines[i];
+			var dy = item.leading;
+			if(i==0) dy = 0;
+			tspan.setAttributeNS(null, "x", node.getAttribute('x'));
+			tspan.setAttributeNS(null, "dy", dy);
+			node.appendChild(tspan);
+		}
 		return node;
 	}
 
